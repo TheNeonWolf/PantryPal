@@ -10,7 +10,7 @@
         <aside class="sidebar">
             <h1>🥫 PantryPal</h1>
             <nav>
-                <a href="dashboard.html" class="active">Dashbord</a>
+                <a href="dashboard.html" class="active">Dashboard</a>
                 <a href="#">Pantry</a>
                 <a href="#">Shopping List</a>
                 <a href="#">Profile</a>
@@ -22,11 +22,11 @@
         <section class="main-content">
             <header class="dashboard-header">
                 <div>
-                    <h2 id="welcomeText">Welcome back👋</h2>
-                    <p>Here's what's happening in your today.</p>
+                    <h2 id="welcomeText">Welcome back 👋</h2>
+                    <p>Here's what's happening in your pantry today.</p>
                 </div>
 
-                <button class="btn">+ Add Item</button>
+                <button id="openAddModalBtn" class="btn">🍎 Add Item</button>
             </header>
 
             <section class="stats-grid">
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="stat-card">
-                    <p>❕Running Low</p>
+                    <p>❗Running Low</p>
                     <h3 id="runningLow">0</h3>
                 </div>
             </section>
@@ -59,6 +59,55 @@
             </section>
         </section>
     </main>
+
+    <div id="addItemModal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>🥫 Add Pantry Item</h2>
+                <button id="closeAddModalBtn" class="icon-btn">✕</button>
+            </div> 
+            <form id="addItemForm">
+                <input type="text" id="itemName" placeholder="Item name" required> 
+                <select id="itemCategory">
+                    <option value="Fruits">Fruits</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Seafood">Seafood</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Frozen">Frozen</option>
+                    <option value="Canned">Canned</option>
+                    <option value="Other">Other</option>
+                </select>  
+                <input type="number" id="itemQuantity" placeholder="Quantity" min="0" required>
+                <select id="itemUnit">
+                    <option value="pcs">pcs</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="mL">mL</option>
+                    <option value="L">L</option>
+                    <option value="pack">pack</option>
+                    <option value="bottle">bottle</option>
+                    <option value="can">can</option>
+                    <option value="box">box</option>
+                    <option value="bag">bag</option>
+                </select> 
+                <input type="number" id="itemMinimumQuantity" placeholder="Minimum quantity" min="0">  
+                <select id="itemLocation">
+                    <option value="Fridge">Fridge</option>
+                    <option value="Freezer">Freezer</option>
+                    <option value="Pantry">Pantry</option>
+                    <option value="Other">Other</option>
+                </select>  
+                <input type="text" id="itemCustomLocation" placeholder="Custom location" class="hidden">   
+                <input type="date" id="itemExpiryDate" required>   
+                <button type="submit" class="btn full-btn">Add Item</button>
+            </form>
+            <p id="addItemMessage" class="message"></p>
+        </div>
+    </div>
 
     <script src="js/dashboard.js"></script>
 </body>

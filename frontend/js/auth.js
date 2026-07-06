@@ -1,3 +1,5 @@
+// Register
+
 const API_URL = "http://localhost:5000/api";
 
 const registerForm = document.getElementById("registerForm");
@@ -32,6 +34,50 @@ if(registerForm) {
             window.location.href = "dashboard.html"
         } catch (error) {
             message.textContent = "Something went wrong. Please try again."
+        }
+    });
+}
+
+
+// Login
+
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+
+if(loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+
+        try {
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                }),
+            });
+
+            const data = await res.json();
+
+            if(!res.ok){
+                loginMessage.textContent =
+                    data.message || "Invalid email or password";
+                return;
+            }
+
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            window.location.href = "dashboard.html";
+        } catch (error) {
+            console.error(error);
+            loginMessage.textContent =
+                "Something went wrong. Please try again.";
         }
     });
 }
