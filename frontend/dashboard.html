@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | PantryPal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="app-layout">
+        <aside class="sidebar">
+            <h1>🥫 PantryPal</h1>
+            <nav>
+                <a href="dashboard.html" class="active">Dashbord</a>
+                <a href="#">Pantry</a>
+                <a href="#">Shopping List</a>
+                <a href="#">Profile</a>
+            </nav>
+
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </aside>
+
+        <section class="main-content">
+            <header class="dashboard-header">
+                <div>
+                    <h2 id="welcomeText">Welcome back👋</h2>
+                    <p>Here's what's happening in your today.</p>
+                </div>
+
+                <button class="btn">+ Add Item</button>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Items</p>
+                    <h3 id="totalItems">0</h3>
+                </div>
+
+                <div class="stat-card warning">
+                    <p>⚠️ Expiring Soon</p>
+                    <h3 id="expiringSoon">0</h3>
+                </div>
+
+                <div class="stat-card danger">
+                    <p>❌ Expired</p>
+                    <h3 id="expiredItems">0</h3>
+                </div>
+
+                <div class="stat-card">
+                    <p>❕Running Low</p>
+                    <h3 id="runningLow">0</h3>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h3>Recent Items</h3>
+                <div id="itemsList" class="items-list">
+                    <p class="empty-text">No items yet.</p>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
