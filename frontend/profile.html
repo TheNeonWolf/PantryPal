@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile | PantryPal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="app-layout">
+        <aside class="sidebar">
+            <h1>🥫 PantryPal</h1>
+
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="pantry.html">Pantry</a>
+                <a href="##">Shopping List</a>
+                <a href="profile.html" class="active">Profile</a>
+            </nav>
+
+            <button id="logoutBtn" class="logout-btn">
+                Logout
+            </button>
+        </aside>
+
+        <section class="main-content">
+            <header class="dashboard-header">
+                <div>
+                    <h2>My Profile</h2>
+                    <p>Your PantryPal account information.</p>
+                </div>
+            </header>
+
+            <section class="panel profile-card">
+                <div class="profile-avatar">
+                    👤
+                </div>
+
+                <h2 id="profileName">Loading...</h2>
+                <p id="profileEmail"></p>
+                <hr>
+
+                <div class="profile-info">
+                    <div>
+                        <h4>Account Created</h4>
+                        <p id="memberSince"></p>
+                    </div>
+
+                    <div>
+                        <h4>Total Pantry Items</h4>
+                        <p id="profileTotalItems">0</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="js/profile.js"></script>
+</body>
+</html>

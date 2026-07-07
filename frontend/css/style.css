@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #f6f7f2;
+    background:#f4f7f5;
     color: #1f2933;
 }
 
@@ -323,4 +323,157 @@ select {
     border-radius: 12px;
     font-size: 16px;
     background: white;
+}
+
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.delete-btn {
+    border: none;
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+
+    border: 1px solid #d6ddd3;
+    border-radius: 12px;
+
+    font-size: 16px;
+    outline: none;
+
+    background: #f9faf8;
+}
+
+#searchInput:focus {
+    border-color: #2f855a;
+    box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.15);
+}
+
+.edit-btn {
+    border: none;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.profile-card {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.profile-avatar {
+    width:110px;
+    height:110px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #e8f7ed;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 42px;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+#profileName {
+    text-align: center;
+    font-size: 2.3rem;
+    margin-bottom: 8px;
+}
+
+#profileEmail {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 35px;
+}
+
+.profile-card hr {
+    border: none;
+    height: 1px;
+    background: #e5e7eb;
+    margin: 35px 0;
+}
+
+.profile-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.profile-info div {
+    background: #f8faf8;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+}
+
+.profile-info h4 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: #666;
+}
+
+.profile-info p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2f855a;
+}
+
+.profile-info div {
+    transition: transform 0.2s ease;
+}
+
+.profile-info div:hover {
+    transform: translateY(-4px);
+}
+
+.stat-card{
+    background:#f5fbf7;
+    border:1px solid #dceee3;
+    border-radius:18px;
+}
+
+.stat-card{
+    transition:.25s ease;
+}
+
+.stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+#logoutBtn{
+    background:#fff;
+    color:#1f5c3d;
+    border:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+#logoutBtn:hover{
+    background:#e8f7ef;
+    transform:scale(1.03);
 }
