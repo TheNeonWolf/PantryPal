@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background:#f4f7f5;
+    background: #f4f7f5;
     color: #1f2933;
 }
 
@@ -14,6 +14,19 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+.btn,
+.edit-btn,
+.delete-btn,
+.logout-btn,
+.icon-btn,
+input,
+select,
+#searchInput {
+    transition: 0.25s ease;
+}
+
+/* Landing Page */
 
 .navbar {
     display: flex;
@@ -35,6 +48,11 @@ a {
     border: none;
     border-radius: 10px;
     display: inline-block;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #256c49;
 }
 
 .big-btn {
@@ -62,6 +80,8 @@ a {
     color: #52616b;
     line-height: 1.6;
 }
+
+/* Auth Pages */
 
 .auth-page {
     min-height: 100vh;
@@ -96,16 +116,25 @@ form {
     gap: 14px;
 }
 
-input {
+input,
+select {
     padding: 14px 16px;
     border: 1px solid #d7ded2;
     border-radius: 12px;
     font-size: 16px;
+    background: white;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+#searchInput:focus {
+    border-color: #2f855a;
+    box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.15);
 }
 
 .full-btn {
-    border: none;
-    cursor: pointer;
+    width: 100%;
     font-size: 16px;
     margin-top: 8px;
 }
@@ -123,6 +152,8 @@ input {
     color: #2f855a;
     font-weight: 700;
 }
+
+/* App Layout */
 
 .app-layout {
     min-height: 100vh;
@@ -152,6 +183,7 @@ input {
     padding: 12px 14px;
     border-radius: 12px;
     color: #d9f3e5;
+    transition: 0.25s ease;
 }
 
 .sidebar nav a.active,
@@ -162,12 +194,18 @@ input {
 
 .logout-btn {
     margin-top: auto;
-    background: transparent;
-    border: 1px solid #d9f3e5;
-    color: white;
+    background: white;
+    border: none;
+    color: #1f5c3d;
     padding: 12px;
     border-radius: 12px;
     cursor: pointer;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background: #e8f7ef;
+    transform: scale(1.03);
 }
 
 .main-content {
@@ -191,6 +229,8 @@ input {
     margin-top: 6px;
 }
 
+/* Dashboard */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -199,10 +239,17 @@ input {
 }
 
 .stat-card {
-    background: white;
+    background: #f5fbf7;
     padding: 24px;
-    border-radius: 22px;
+    border-radius: 18px;
+    border: 1px solid #dceee3;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    transition: 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
 .stat-card p {
@@ -221,6 +268,8 @@ input {
 .danger {
     border-left: 6px solid #ef4444;
 }
+
+/* Panels and Lists */
 
 .panel {
     background: white;
@@ -257,6 +306,12 @@ input {
     color: #52616b;
 }
 
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .badge {
     padding: 7px 12px;
     border-radius: 999px;
@@ -278,6 +333,46 @@ input {
     background: #fee2e2;
     color: #991b1b;
 }
+
+.edit-btn,
+.delete-btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.edit-btn:hover {
+    background: #bfdcff;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    border: 1px solid #d6ddd3;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    background: #f9faf8;
+}
+
+/* Modal */
 
 .modal {
     position: fixed;
@@ -317,58 +412,11 @@ input {
     cursor: pointer;
 }
 
-select {
-    padding: 14px 16px;
-    border: 1px solid #d7ded2;
-    border-radius: 12px;
-    font-size: 16px;
-    background: white;
+.icon-btn:hover {
+    background: #e8efe8;
 }
 
-.item-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.delete-btn {
-    border: none;
-    background: #fee2e2;
-    color: #991b1b;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-#searchInput {
-    width: 100%;
-    padding: 14px 18px;
-    margin-bottom: 24px;
-
-    border: 1px solid #d6ddd3;
-    border-radius: 12px;
-
-    font-size: 16px;
-    outline: none;
-
-    background: #f9faf8;
-}
-
-#searchInput:focus {
-    border-color: #2f855a;
-    box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.15);
-}
-
-.edit-btn {
-    border: none;
-    background: #dbeafe;
-    color: #1e40af;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-weight: 700;
-    cursor: pointer;
-}
+/* Profile */
 
 .profile-card {
     max-width: 900px;
@@ -380,31 +428,29 @@ select {
 }
 
 .profile-avatar {
-    width:110px;
-    height:110px;
-
+    width: 110px;
+    height: 110px;
     margin: 0 auto 20px;
-
     border-radius: 50%;
-
     background: #e8f7ed;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     font-size: 42px;
-    box-shadow:0 6px 18px rgba(0,0,0,.12);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+#profileName,
+#profileEmail {
+    text-align: center;
 }
 
 #profileName {
-    text-align: center;
     font-size: 2.3rem;
     margin-bottom: 8px;
 }
 
 #profileEmail {
-    text-align: center;
     color: #666;
     font-size: 1.1rem;
     margin-bottom: 35px;
@@ -425,9 +471,15 @@ select {
 
 .profile-info div {
     background: #f8faf8;
+    border: 1px solid #e5eee7;
     border-radius: 18px;
     padding: 30px;
     text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.profile-info div:hover {
+    transform: translateY(-4px);
 }
 
 .profile-info h4 {
@@ -440,40 +492,4 @@ select {
     font-size: 1.8rem;
     font-weight: bold;
     color: #2f855a;
-}
-
-.profile-info div {
-    transition: transform 0.2s ease;
-}
-
-.profile-info div:hover {
-    transform: translateY(-4px);
-}
-
-.stat-card{
-    background:#f5fbf7;
-    border:1px solid #dceee3;
-    border-radius:18px;
-}
-
-.stat-card{
-    transition:.25s ease;
-}
-
-.stat-card:hover{
-    transform:translateY(-4px);
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
-}
-
-#logoutBtn{
-    background:#fff;
-    color:#1f5c3d;
-    border:none;
-    font-weight:600;
-    transition:.3s;
-}
-
-#logoutBtn:hover{
-    background:#e8f7ef;
-    transform:scale(1.03);
 }

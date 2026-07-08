@@ -4,6 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import connectDB from "./config/db.js";
 import pantryRoutes from "./routes/pantry.routes.js";
+import shoppingRoutes from "./routes/shopping.routes.js";
 
 dotenv.config();
 await connectDB();
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/pantry", pantryRoutes);
+app.use("/api/shopping", shoppingRoutes)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
