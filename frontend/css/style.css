@@ -493,3 +493,109 @@ select:focus,
     font-weight: bold;
     color: #2f855a;
 }
+
+.bought {
+    opacity: 0.55;
+}
+
+.bought h4,
+.bought p {
+    text-decoration: line-through;
+}
+
+.check-btn {
+    border: none;
+    background: #dcfce7;
+    color: #166534;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.check-btn:hover {
+    background: #bbf7d0;
+}
+
+#shoppingSearchInput {
+    width: 100%;
+    padding: 15px 18px;
+    margin-bottom: 24px;
+
+    border: 1px solid #d6ddd3;
+    border-radius: 14px;
+
+    background: #f9faf8;
+    font-size: 16px;
+
+    transition: .25s;
+}
+
+#shoppingSearchInput:focus {
+    outline: none;
+    border-color: #2f855a;
+    box-shadow: 0 0 0 4px rgba(47,133,90,.15);
+}
+
+.shopping-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 20px;
+    margin-bottom: 14px;
+
+    background: #f8faf8;
+    border-radius: 16px;
+
+    transition: .25s;
+}
+
+.shopping-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.shopping-item h4 {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+.shopping-item p {
+    color: #64748b;
+}
+
+.edit-btn,
+.delete-btn {
+    transition: .2s;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+    transform: scale(1.05);
+}
+
+.shopping-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.shopping-empty {
+    text-align: center;
+    padding: 50px;
+    color: #94a3b8;
+}
+
+.shopping-empty h3 {
+    margin-bottom: 10px;
+}
+
+.quantity-text {
+    color: #2f855a;
+    font-weight: 700;
+}
+
+.shopping-item:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(0,0,0,.08);
+}

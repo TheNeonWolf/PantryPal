@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping List | PantryPal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="app-layout">
+        <aside class="sidebar">
+            <h1>🥫 PantryPal</h1>
+
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="pantry.html">Pantry</a>
+                <a href="shopping.html" class="active">Shopping List</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </aside>
+
+        <section class="main-content">
+            <header class="dashboard-header">
+                <div>
+                    <h2>Shopping List</h2>
+                    <p>Track what you need to buy next.</p>
+                </div>
+                <button id="openShoppingModalBtn" class="btn">🛒 Add Item</button>
+            </header>
+
+            <section class="panel">
+                <input type="text" id="shoppingSearchInput" placeholder="Search shopping items...">
+
+                <div id="shoppingList" class="items-list">
+                    <p class="empty-text">Loading shopping list...</p>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div id="shoppingModal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>🛒 Add Shopping Item</h2>
+                <button id="closeShoppingModalBtn" class="icon-btn">✕</button>
+            </div>
+
+            <form id="shoppingForm">
+                <input type="text" id="shoppingName" placeholder="Item Name" required>
+                <input type="number" id="shoppingQuantity" placeholder="Quantity" min="0" required>
+
+                <select id="shoppingUnit">
+                    <option value="pcs">pcs</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="mL">mL</option>
+                    <option value="L">L</option>
+                    <option value="pack">pack</option>
+                    <option value="bottle">bottle</option>
+                    <option value="can">can</option>
+                    <option value="box">box</option>
+                    <option value="bag">bag</option>
+                </select>
+
+                <button type="submit" class="btn full-btn">Add Item</button>
+            </form>
+            <p id="shoppingMessage" class="message"></p>
+        </div>
+    </div>
+
+    <script src="js/shopping.js"></script>
+</body>
+</html>
