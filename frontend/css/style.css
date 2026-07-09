@@ -599,3 +599,35 @@ select:focus,
     transform:translateY(-2px);
     box-shadow:0 10px 24px rgba(0,0,0,.08);
 }
+
+.shopping-btn {
+    border: none;
+    background: #fffd83;
+    color: #7300ff;
+    padding:10px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.shopping-btn:hover {
+    background: #f6f66a;
+    transform: scale(1.05);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.secondary-btn {
+    background: #f1f5f0;
+    color: #1f2933;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}

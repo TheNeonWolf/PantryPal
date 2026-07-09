@@ -74,6 +74,45 @@
         </div>
     </div>
 
+    <div id="lowStockModal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>⚠️ Running Low</h2>
+                <button id="closeLowStockModalBtn" class="icon-btn">✕</button>
+            </div>
+
+            <p id="lowStockMessage">
+                This item is running low. Add it to your shopping list?
+            </p>
+
+            <div class="modal-actions">
+                <button id="addLowStockToShoppingBtn" class="btn">
+                    🛒 Add to Shopping
+                </button>
+
+                <button id="dismissLowStockBtn" class="secondary-btn">
+                    Not now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="shoppingQuantityModal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>🛒 Add to Shopping List</h2>
+                <button id="closeShoppingQuantityModalBtn" class="icon-btn">✕</button>
+            </div>
+        
+            <p id="shoppingQuantityMessage"></p>
+        
+            <form id="shoppingQuantityForm">
+                <input type="number" id="shoppingQuantityInput" min="1" required>
+                <button type="submit" class="btn full-btn">Add to List</button>
+            </form>
+        </div>
+    </div>
+
     <script src="js/pantry.js"></script>
 </body>
 </html>

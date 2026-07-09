@@ -12,6 +12,18 @@ const editItemModal = document.getElementById("editItemModal");
 const closeEditModalBtn = document.getElementById("closeEditModalBtn");
 const editItemForm = document.getElementById("editItemForm");
 const editItemMessage = document.getElementById("editItemMessage");
+const lowStockModal = document.getElementById("lowStockModal");
+const closeLowStockModalBtn = document.getElementById("closeLowStockModalBtn");
+const dismissLowStockBtn = document.getElementById("dismissLowStockBtn");
+const addLowStockToShoppingBtn = document.getElementById("addLowStockToShoppingBtn");
+const lowStockMessage = document.getElementById("lowStockMessage");
+const shoppingQuantityModal = document.getElementById("shoppingQuantityModal");
+const closeShoppingQuantityModalBtn = document.getElementById("closeShoppingQuantityModalBtn");
+const shoppingQuantityMessage = document.getElementById("shoppingQuantityMessage");
+const shoppingQuantityForm = document.getElementById("shoppingQuantityForm");
+const shoppingQuantityInput = document.getElementById("shoppingQuantityInput");
+let shoppingItemToAdd = null;
+let lowStockItemToAdd = null;
 
 let pantryItems = [];
 
@@ -56,12 +68,16 @@ const renderItems = (items) => {
                             ${status}
                         </span>
 
+                        <button class="shopping-btn" data-id="${item._id}">
+                            ➕ List
+                        </button>
+
                         <button class="edit-btn" data-id="${item._id}">
-                            Edit
+                            ✏️ Edit
                         </button>
 
                         <button class="delete-btn" data-id="${item._id}">
-                            Remove
+                            ❌ Remove
                         </button>
                     </div>
                 </div>
@@ -90,6 +106,59 @@ const deleteItem = async (id) => {
 
         pantryItems = pantryItems.filter((item) => item._id !== id);
         renderItems(pantryItems);
+    } catch (error) {
+        console.error(error);
+        alert("Something went wrong.");
+    }
+};
+
+const openShoppingQuantityModal  = async (id) => {
+    const item = pantryItems.find((item) => item._id === id);
+
+    if(!item) return;
+
+    shoppingItemToAdd = item;
+
+    const suggestedQuantity = Math.max(
+        (item.minimumQuantity || 1)  - item.quantity,
+        1
+    );
+
+    shoppingQuantityMessage.textContent =
+        `Add ${item.name} to your shopping list. Choose quantity (${item.unit}):`;
+
+    shoppingQuantityInput.value = suggestedQuantity;
+    shoppingQuantityModal.classList.remove("hidden");
+};
+
+const addToShoppingList = async (quantity) => {
+    if(!shoppingItemToAdd) return;
+
+    const shoppingItem = {
+        name: shoppingItemToAdd.name,
+        quantity: Number(quantity),
+        unit: shoppingItemToAdd.unit
+    };
+
+    try {
+        const res = await fetch(`${API_URL}/shopping`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(shoppingItem),
+        });
+
+        if (!res.ok) {
+            alert("Could not add item to shopping list.");
+            return;
+        }
+
+        shoppingQuantityModal.classList.add("hidden");
+        shoppingItemToAdd = null;
+        shoppingQuantityForm.reset();
+        alert(`${shoppingItem.name} added to shopping list.`);
     } catch (error) {
         console.error(error);
         alert("Something went wrong.");
@@ -142,6 +211,13 @@ const updateItem = async (e) => {
 
         editItemModal.classList.add("hidden");
         editItemMessage.textContent = "";
+        
+        const updatedItem = data.item;
+        if(updatedItem.quantity <= updatedItem.minimumQuantity) {
+            lowStockItemToAdd = updatedItem;
+            lowStockMessage.textContent = `${updatedItem.name} is running low. Add it to your shopping list?`;
+            lowStockModal.classList.remove("hidden");
+        }
         loadPantryItems();
     } catch (error) {
         console.error(error);
@@ -200,6 +276,11 @@ pantryList.addEventListener("click", (e) => {
         const id = e.target.dataset.id;
         openEditModal(id);
     }
+
+    if (e.target.classList.contains("shopping-btn")) {
+        const id = e.target.dataset.id;
+        openShoppingQuantityModal(id);
+    }
 });
 
 if (logoutBtn) {
@@ -233,6 +314,58 @@ if (closeEditModalBtn) {
 
 if (editItemForm) {
     editItemForm.addEventListener("submit", updateItem);
+}
+
+if (closeLowStockModalBtn) {
+    closeLowStockModalBtn.addEventListener("click", () => {
+        lowStockModal.classList.add("hidden");
+        lowStockItemToAdd = null;
+    });
+}
+
+if (dismissLowStockBtn) {
+    dismissLowStockBtn.addEventListener("click", () => {
+        lowStockModal.classList.add("hidden");
+        lowStockItemToAdd = null;
+    });
+}
+
+if (addLowStockToShoppingBtn) {
+    addLowStockToShoppingBtn.addEventListener("click", () => {
+        if (!lowStockItemToAdd) return;
+
+        shoppingItemToAdd = lowStockItemToAdd;
+
+        const suggestedQuantity = Math.max(
+            (lowStockItemToAdd.minimumQuantity || 1) - lowStockItemToAdd.quantity,
+            1
+        );
+
+        shoppingQuantityMessage.textContent =
+            `Add ${lowStockItemToAdd.name} to your shopping list. Choose quantity (${lowStockItemToAdd.unit}):`;
+
+        shoppingQuantityInput.value = suggestedQuantity;
+
+        lowStockModal.classList.add("hidden");
+        shoppingQuantityModal.classList.remove("hidden");
+        lowStockItemToAdd = null;
+    });
+}
+
+if (closeShoppingQuantityModalBtn) {
+    closeShoppingQuantityModalBtn.addEventListener("click", () => {
+        shoppingQuantityModal.classList.add("hidden");
+        shoppingItemToAdd = null;
+        shoppingQuantityForm.reset();
+    });
+}
+
+if (shoppingQuantityForm) {
+    shoppingQuantityForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        await addToShoppingList(shoppingQuantityInput.value);
+    });
 }
 
 loadPantryItems();
