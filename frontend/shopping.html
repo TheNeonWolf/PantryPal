@@ -26,7 +26,16 @@
                     <h2>Shopping List</h2>
                     <p>Track what you need to buy next.</p>
                 </div>
-                <button id="openShoppingModalBtn" class="btn">🛒 Add Item</button>
+            
+                <div class="header-actions">
+                    <button id="moveBoughtBtn" class="secondary-btn">
+                        📦 Move Bought to Pantry
+                    </button>
+                
+                    <button id="openShoppingModalBtn" class="btn">
+                        🛒 Add Item
+                    </button>
+                </div>
             </header>
 
             <section class="panel">
@@ -66,6 +75,75 @@
                 <button type="submit" class="btn full-btn">Add Item</button>
             </form>
             <p id="shoppingMessage" class="message"></p>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal hidden">
+        <div class="modal-card delete-modal">
+            <div class="modal-header">
+                <h2>🗑️ Delete Shopping Item</h2>
+            </div>
+
+            <p id="deleteMessage" class="delete-message">Are you sure?</p>
+
+            <div class="delete-actions">
+                <button id="cancelDeleteBtn" class="icon-btn">Cancel</button>
+                <button id="confirmDeleteBtn" class="delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <div id="logoutModal" class="modal hidden">
+        <div class="modal-card small-modal">
+            <h2>
+                <span>👋</span>
+                <span>Logout</span>
+            </h2>
+        
+            <p id="logoutMessage">
+                Are you sure you want to log out?
+            </p>
+        
+            <div class="modal-actions">
+                <button id="cancelLogoutBtn" class="secondary-btn">
+                    Cancel
+                </button>
+            
+                <button id="confirmLogoutBtn" class="btn">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="moveBoughtModal" class="modal hidden">
+        <div class="modal-card move-bought-modal">
+            <div class="modal-header">
+                <div>
+                    <h2>📦 Move Bought Items</h2>
+                    <p>Add storage details before moving them into your pantry.</p>
+                </div>
+
+                <button id="closeMoveBoughtModalBtn" class="icon-btn">
+                    ✕
+                </button>
+            </div>
+
+            <div id="moveBoughtItemsList" class="move-bought-items-list"></div>
+
+            <p id="moveBoughtMessage" class="message"></p>
+
+            <div class="move-bought-actions">
+                <button id="cancelMoveBoughtBtn" class="secondary-btn">
+                    Cancel
+                </button>
+
+                <button id="confirmMoveBoughtBtn" class="btn">
+                    Move All to Pantry
+                </button>
+            </div>
         </div>
     </div>
 

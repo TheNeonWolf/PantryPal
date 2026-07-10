@@ -1,5 +1,17 @@
 import PantryItem from "../models/pantryItem.models.js";
 
+function capitalize(str) {
+    return str
+        .trim()
+        .split(" ")
+        .filter(word => word.length > 0)
+        .map(word =>
+            word.charAt(0).toUpperCase() +
+            word.slice(1).toLowerCase()
+        )
+        .join(" ");
+}
+
 const addPantryItem = async (req, res) => {
     try {
         const {
@@ -16,7 +28,7 @@ const addPantryItem = async (req, res) => {
 
         const item = await PantryItem.create({
             user: req.user._id,
-            name,
+            name: capitalize(name),
             category,
             quantity,
             unit,
@@ -27,12 +39,12 @@ const addPantryItem = async (req, res) => {
             imageUrl,
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: "Pantry item has been added successfully",
             item
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 
 };
@@ -42,11 +54,11 @@ const getPantryItems = async (req, res) => {
         const items = await PantryItem.find({ user: req.user._id }).sort({
             expiryDate: 1
         });
-        res.status(200).json({
+        return res.status(200).json({
             items
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: error.message
         });
     }
@@ -65,9 +77,9 @@ const getPantryItem = async (req, res) => {
             });
         }
 
-        res.status(200).json({ item });
+        return res.status(200).json({ item });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -89,12 +101,12 @@ const updatePantryItem = async (req, res) => {
             return res.status(404).json({ message: "Item not found" });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Pantry item updated successfully",
             item
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -109,11 +121,11 @@ const deletePantryItem = async (req, res) => {
             return res.status(404).json({ message: "Pantry item not found" });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Pantry item deleted successfully",
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 

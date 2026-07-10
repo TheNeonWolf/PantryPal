@@ -22,6 +22,9 @@ const addItemForm = document.getElementById("addItemForm");
 const itemLocation = document.getElementById("itemLocation");
 const itemCustomLocation = document.getElementById("itemCustomLocation");
 const addItemMessage = document.getElementById("addItemMessage");
+const logoutModal = document.getElementById("logoutModal");
+const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
 
 if(user && welcomeText) {
     welcomeText.textContent = `Welcome back, ${user.name} 👋`;
@@ -182,27 +185,33 @@ if (addItemForm) {
     });
 }
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        try {
-            const response = await fetch(`${API_URL}/auth/logout`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-        
-            if(!response.ok) {
-                throw new Error("Logout failed");
+logoutBtn.addEventListener("click", () => {
+    logoutModal.classList.remove("hidden");
+});
+
+cancelLogoutBtn.addEventListener("click", () => {
+    logoutModal.classList.add("hidden");
+});
+
+confirmLogoutBtn.addEventListener("click", async () => {
+    try {
+        const response = await fetch(`${API_URL}/auth/logout`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        } catch (error) {
-         console.log("Logout request failed, clearing local session anyway.");
+        });
+        
+        if(!response.ok) {
+            throw new Error("Logout failed");
         }
+    } catch (error) {
+     console.log("Logout request failed, clearing local session anyway.");
+    }
     
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-    });
-}
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+});
 
 loadDashboard();

@@ -22,10 +22,30 @@ const closeShoppingQuantityModalBtn = document.getElementById("closeShoppingQuan
 const shoppingQuantityMessage = document.getElementById("shoppingQuantityMessage");
 const shoppingQuantityForm = document.getElementById("shoppingQuantityForm");
 const shoppingQuantityInput = document.getElementById("shoppingQuantityInput");
+const toast = document.getElementById("toast");
+const deleteModal = document.getElementById("deleteModal");
+const deleteMessage = document.getElementById("deleteMessage");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+const logoutModal = document.getElementById("logoutModal");
+const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+
 let shoppingItemToAdd = null;
 let lowStockItemToAdd = null;
-
+let deleteItemId = null;
 let pantryItems = [];
+
+const showToast = (message) => {
+    toast.textContent = message;
+    toast.classList.remove("hidden");
+    toast.classList.add("show")
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hidden");
+    }, 2500);
+}
 
 const getDaysLeft = (expiryDate) => {
     const today = new Date();
@@ -86,30 +106,50 @@ const renderItems = (items) => {
         .join("");
 };
 
-const deleteItem = async (id) => {
-    const confirmDelete = confirm("Are you sure you want to remove this item?");
+const deleteItem = (id) => {
+    const item = pantryItems.find(
+        (item) => item._id === id
+    );
+    if(!item) return;
+    deleteItemId = id;
 
-    if(!confirmDelete) return;
+    deleteMessage.textContent =
+        `Are you sure you want to remove "${item.name}"?`;
+    deleteModal.classList.remove("hidden");
+};
+
+const confirmDelete = async () => {
+    if(!deleteItemId) return;
 
     try {
-        const res = await fetch(`${API_URL}/pantry/${id}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`
+        const res = await fetch(
+            `${API_URL}/pantry/${deleteItemId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             }
-        });
+        ); 
 
-        if (!res.ok) {
-            alert("Could not delete item.");
+        if(!res.ok) {
+            showToast("❌ Could not remove item.");
             return;
         }
 
-        pantryItems = pantryItems.filter((item) => item._id !== id);
+        pantryItems = pantryItems.filter(
+            (item) => item._id !== deleteItemId
+        );
+
         renderItems(pantryItems);
+        showToast("🗑️ Item removed.");
     } catch (error) {
         console.error(error);
-        alert("Something went wrong.");
+        showToast("❌ Something went wrong.");
     }
+
+    deleteItemId = null;
+    deleteModal.classList.add("hidden");
 };
 
 const openShoppingQuantityModal  = async (id) => {
@@ -158,7 +198,7 @@ const addToShoppingList = async (quantity) => {
         shoppingQuantityModal.classList.add("hidden");
         shoppingItemToAdd = null;
         shoppingQuantityForm.reset();
-        alert(`${shoppingItem.name} added to shopping list.`);
+        showToast(`✅ ${shoppingItem.name} added to shopping list.`);
     } catch (error) {
         console.error(error);
         alert("Something went wrong.");
@@ -283,28 +323,34 @@ pantryList.addEventListener("click", (e) => {
     }
 });
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-        try {
-            const response = await fetch(`${API_URL}/auth/logout`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-        
-            if(!response.ok) {
-                throw new Error("Logout failed");
+logoutBtn.addEventListener("click", () => {
+    logoutModal.classList.remove("hidden");
+});
+
+cancelLogoutBtn.addEventListener("click", () => {
+    logoutModal.classList.add("hidden");
+});
+
+confirmLogoutBtn.addEventListener("click", async () => {
+    try {
+        const response = await fetch(`${API_URL}/auth/logout`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        } catch (error) {
-         console.log("Logout request failed, clearing local session anyway.");
+        });
+        
+        if(!response.ok) {
+            throw new Error("Logout failed");
         }
+    } catch (error) {
+     console.log("Logout request failed, clearing local session anyway.");
+    }
     
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-    });
-}
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+});
 
 if (closeEditModalBtn) {
     closeEditModalBtn.addEventListener("click", () => {
@@ -365,6 +411,23 @@ if (shoppingQuantityForm) {
         e.preventDefault();
 
         await addToShoppingList(shoppingQuantityInput.value);
+    });
+}
+
+if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener(
+        "click",
+        confirmDelete
+    );
+}
+
+if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener("click", () => {
+
+        deleteItemId = null;
+
+        deleteModal.classList.add("hidden");
+
     });
 }
 

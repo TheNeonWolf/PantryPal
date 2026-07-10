@@ -11,6 +11,9 @@ const profileEmail = document.getElementById("profileEmail");
 const memberSince = document.getElementById("memberSince");
 const profileTotalItems = document.getElementById("profileTotalItems");
 const logoutBtn = document.getElementById("logoutBtn");
+const logoutModal = document.getElementById("logoutModal");
+const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
 
 const loadProfile = async () => {
     try {
@@ -58,12 +61,33 @@ const loadProfile = async () => {
     }
 };
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-    });
-}
+logoutBtn.addEventListener("click", () => {
+    logoutModal.classList.remove("hidden");
+});
+
+cancelLogoutBtn.addEventListener("click", () => {
+    logoutModal.classList.add("hidden");
+});
+
+confirmLogoutBtn.addEventListener("click", async () => {
+    try {
+        const response = await fetch(`${API_URL}/auth/logout`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        
+        if(!response.ok) {
+            throw new Error("Logout failed");
+        }
+    } catch (error) {
+     console.log("Logout request failed, clearing local session anyway.");
+    }
+    
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+});
 
 loadProfile();

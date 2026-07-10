@@ -113,6 +113,97 @@
         </div>
     </div>
 
+    <div id="toast" class="toast hidden"></div>
+
+    <div id="deleteModal" class="modal hidden">
+        <div class="modal-card delete-modal">
+
+            <div class="modal-header">
+                <h2>🗑️ Remove Item</h2>
+            </div>
+
+            <p id="deleteMessage" class="delete-message">
+                Are you sure?
+            </p>
+
+            <div class="delete-actions">
+                <button
+                    id="cancelDeleteBtn"
+                    class="icon-btn">
+                    Cancel
+                </button>
+
+                <button
+                    id="confirmDeleteBtn"
+                    class="delete-btn">
+                    Delete
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="logoutModal" class="modal hidden">
+        <div class="modal-card small-modal">
+            <h2>
+                <span>👋</span>
+                <span>Logout</span>
+            </h2>
+        
+            <p id="logoutMessage">
+                Are you sure you want to log out?
+            </p>
+        
+            <div class="modal-actions">
+                <button id="cancelLogoutBtn" class="secondary-btn">
+                    Cancel
+                </button>
+            
+                <button id="confirmLogoutBtn" class="btn">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="expiryPopover" class="expiry-popover hidden">
+    <div class="expiry-popover-header">
+        <div>
+            <p class="expiry-popover-label">📅 Expiry Details</p>
+            <h3 id="expiryPopoverName">Item</h3>
+        </div>
+
+        <button id="closeExpiryPopoverBtn" class="icon-btn">✕</button>
+    </div>
+
+    <div class="expiry-popover-grid">
+            <div>
+                <span>Expiry date</span>
+                <strong id="expiryPopoverDate">—</strong>
+            </div>
+        
+            <div>
+                <span>Status</span>
+                <strong id="expiryPopoverStatus">—</strong>
+            </div>
+        
+            <div>
+                <span>Time remaining</span>
+                <strong id="expiryPopoverRemaining">—</strong>
+            </div>
+        
+            <div>
+                <span>Location</span>
+                <strong id="expiryPopoverLocation">—</strong>
+            </div>
+        
+            <div>
+                <span>Quantity</span>
+                <strong id="expiryPopoverQuantity">—</strong>
+            </div>
+        </div>
+    </div>
+
     <script src="js/pantry.js"></script>
 </body>
 </html>

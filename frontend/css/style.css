@@ -631,3 +631,239 @@ select:focus,
     cursor: pointer;
     font-weight: 700;
 }
+
+.toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    background: #173b2f;
+    color: white;
+    padding: 14px 18px;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    font-weight: 700;
+    z-index: 9999;
+}
+
+.toast.show {
+    display: block;
+}
+
+.toast.hidden {
+    display: none;
+}
+
+.delete-modal {
+    max-width: 450px;
+}
+
+.delete-message {
+    margin: 20px 0;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.small-modal {
+    max-width: 460px;
+    padding: 36px;
+    text-align: center;
+}
+
+.small-modal h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 2rem;
+    margin-bottom: 14px;
+    line-height: 1;
+}
+
+.small-modal p {
+    color: #4b5563;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.modal-actions button {
+    min-width: 110px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.secondary-btn {
+    background: #edf2ef;
+    color: #374151;
+    border: none;
+}
+
+.secondary-btn:hover {
+    background: #dfe8e2;
+    transform: translateY(-2px);
+}
+
+.modal-actions .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Header buttons */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Move bought items modal */
+
+.move-bought-modal {
+    max-width: 760px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.move-bought-modal .modal-header {
+    align-items: flex-start;
+}
+
+.move-bought-modal .modal-header p {
+    margin-top: 6px;
+    color: #52616b;
+    line-height: 1.5;
+}
+
+/* Generated item sections */
+
+.move-bought-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.move-item-card {
+    padding: 22px;
+    background: #f8faf8;
+    border: 1px solid #dceee3;
+    border-radius: 18px;
+}
+
+.move-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.move-item-header h3 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.move-item-header p {
+    color: #52616b;
+}
+
+.move-item-quantity {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* Fields inside each item */
+
+.move-item-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.move-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.move-form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.move-form-group label {
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.move-form-group input,
+.move-form-group select {
+    width: 100%;
+}
+
+/* Modal footer */
+
+.move-bought-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.move-bought-actions button {
+    min-width: 150px;
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+    .header-actions {
+        width: 100%;
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .move-item-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .move-form-group.full-width {
+        grid-column: auto;
+    }
+
+    .move-bought-actions {
+        flex-direction: column-reverse;
+    }
+
+    .move-bought-actions button {
+        width: 100%;
+    }
+}
