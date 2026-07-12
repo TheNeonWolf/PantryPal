@@ -85,6 +85,15 @@ select,
     font-weight: 700;
 }
 
+.hero-link {
+    color: #52616b;
+    font-weight: 600;
+}
+
+.hero-link:hover {
+    color: #2f855a;
+}
+
 .btn {
     background: #2f855a;
     color: white;
