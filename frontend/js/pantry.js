@@ -30,6 +30,32 @@ const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const logoutModal = document.getElementById("logoutModal");
 const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
 const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+const expiryPopover = document.getElementById("expiryPopover");
+const closeExpiryPopoverBtn = document.getElementById("closeExpiryPopoverBtn");
+const expiryPopoverName = document.getElementById("expiryPopoverName");
+const expiryPopoverDate = document.getElementById("expiryPopoverDate");
+const expiryPopoverStatus = document.getElementById("expiryPopoverStatus");
+const expiryPopoverRemaining = document.getElementById("expiryPopoverRemaining");
+const expiryPopoverLocation = document.getElementById("expiryPopoverLocation");
+const expiryPopoverQuantity = document.getElementById("expiryPopoverQuantity");
+
+const getCategoryIcon = (category) => {
+    const categoryIcons = {
+        Fruits: "🍎",
+        Vegetables: "🥦",
+        Dairy: "🥛",
+        Meat: "🥩",
+        Seafood: "🐟",
+        Grains: "🌾",
+        Snacks: "🍪",
+        Drinks: "🥤",
+        Frozen: "🧊",
+        Canned: "🥫",
+        Other: "📦"
+    };
+
+    return categoryIcons[category] || "📦";
+};
 
 let shoppingItemToAdd = null;
 let lowStockItemToAdd = null;
@@ -75,18 +101,27 @@ const renderItems = (items) => {
         .map((item) => {
             const status = getExpiryStatus(item.expiryDate);
             const location = item.customLocation || item.location;
+            const icon = getCategoryIcon(item.category);
 
             return `
                 <div class="item-row">
                     <div>
-                        <h4>${item.name}</h4>
+                        <h4>
+                            <span class="item-category-icon">${icon}</span>
+                            ${item.name}
+                        </h4>
                         <p>${item.quantity} ${item.unit} • ${location}</p>
                     </div>
 
                     <div class="item-actions">
-                        <span class="badge ${status.toLowerCase().replace(" ", "-")}">
+                        <button
+                            class="badge clickable expiry-badge ${status
+                                .toLowerCase()
+                                .replace(" ", "-")}"
+                            data-id="${item._id}"
+                        >
                             ${status}
-                        </span>
+                        </button>
 
                         <button class="shopping-btn" data-id="${item._id}">
                             ➕ List
@@ -233,6 +268,35 @@ const updateItem = async (e) => {
     };
 
     try {
+        if (updatedData.quantity === 0){
+            const deleteRes = await fetch(
+                `${API_URL}/pantry/${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            ); 
+
+            if (!deleteRes.ok) {
+                editItemMessage.textContent =
+                    "Could not remove item.";
+                return;
+            }
+
+            editItemModal.classList.add("hidden");
+            editItemMessage.textContent = "";
+
+            pantryItems = pantryItems.filter(
+                (item) => item._id !== id
+            );
+
+            renderItems(pantryItems);
+            showToast("🗑️ Item removed because quantity reached 0.");
+            return;
+        }
+
         const res = await fetch(`${API_URL}/pantry/${id}`, {
             method: "PUT",
             headers: {
@@ -290,6 +354,56 @@ const loadPantryItems = async () => {
     }
 };
 
+const formatExpiryDate = (expiryDate) => {
+    return new Date(expiryDate).toLocaleDateString("en-SG", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+};
+
+const getExpiryRemainingText = (expiryDate) => {
+    const daysLeft = getDaysLeft(expiryDate);
+
+    if (daysLeft < 0) {
+        const daysAgo = Math.abs(daysLeft);
+        return `Expired ${daysAgo} day${daysAgo === 1 ? "" : "s"} ago`;
+    }
+
+    if (daysLeft === 0) {
+        return "Expires today";
+    }
+
+    if (daysLeft === 1){
+        return "1 day remaining";
+    }
+
+    return `${daysLeft} days remaining`;
+};
+
+const openExpiryPopover = (item) => {
+    const location = item.customLocation || item.location;
+
+    expiryPopoverName.textContent = item.name;
+
+    expiryPopoverDate.textContent =
+        formatExpiryDate(item.expiryDate);
+
+    expiryPopoverStatus.textContent =
+        getExpiryStatus(item.expiryDate);
+
+    expiryPopoverRemaining.textContent =
+        getExpiryRemainingText(item.expiryDate);
+
+    expiryPopoverLocation.textContent =
+        location || "Not specified";
+
+    expiryPopoverQuantity.textContent =
+        `${item.quantity} ${item.unit}`;
+
+    expiryPopover.classList.remove("hidden");
+};
+
 searchInput.addEventListener("input", () => {
     const searchTerm = searchInput.value.toLowerCase();
 
@@ -320,6 +434,16 @@ pantryList.addEventListener("click", (e) => {
     if (e.target.classList.contains("shopping-btn")) {
         const id = e.target.dataset.id;
         openShoppingQuantityModal(id);
+    }
+
+    if (e.target.classList.contains("expiry-badge")) {
+        const item = pantryItems.find(
+            (item) => item._id === e.target.dataset.id
+        );
+
+        if (item) {
+            openExpiryPopover(item);
+        }
     }
 });
 
@@ -430,5 +554,20 @@ if (cancelDeleteBtn) {
 
     });
 }
+
+if (closeExpiryPopoverBtn) {
+    closeExpiryPopoverBtn.addEventListener("click", () => {
+        expiryPopover.classList.add("hidden");
+    });
+}
+
+document.addEventListener("click", (e) => {
+    const clickedBadge = e.target.classList.contains("expiry-badge");
+    const clickedInsidePopover = expiryPopover.contains(e.target);
+
+    if (!clickedBadge && !clickedInsidePopover) {
+        expiryPopover.classList.add("hidden");
+    }
+});
 
 loadPantryItems();

@@ -94,9 +94,7 @@ const renderShoppingItems = (items) => {
                             ${item.isBought ? "⟲" : "✔️"}
                         </button>
 
-                        <button class="delete-btn" data-id="${item._id}">
-                            ❌
-                        </button>
+                        <button class="delete-btn" data-id="${item._id}">❌</button>
                     </div>
                 </div>
             `;

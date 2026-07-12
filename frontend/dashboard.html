@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Dashboard | PantryPal</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="./images/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="./images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="./images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="./images/favicon-48x48.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="manifest" href="./images/site.webmanifest">
 </head>
 <body>
     <main class="app-layout">
@@ -26,7 +32,10 @@
                     <p>Here's what's happening in your pantry today.</p>
                 </div>
 
-                <button id="openAddModalBtn" class="btn">🍎 Add Item</button>
+                <button id="openAddModalBtn" class="btn">
+                    <span class="add-item-icon">+</span>
+                    Add Item
+                </button>
             </header>
 
             <section class="stats-grid">
@@ -128,6 +137,49 @@
                 <button id="confirmLogoutBtn" class="btn">
                     Logout
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="expiryPopover" class="expiry-popover hidden">
+        <div class="expiry-popover-card">
+            <div class="expiry-popover-header">
+                <h2 id="expiryPopoverName">Item details</h2>
+            
+                <button
+                    id="closeExpiryPopoverBtn"
+                    class="icon-btn"
+                    type="button"
+                >
+                    ✕
+                </button>
+            </div>
+        
+            <div class="expiry-popover-grid">
+                <div>
+                    <span>Expiry date</span>
+                    <strong id="expiryPopoverDate">—</strong>
+                </div>
+            
+                <div>
+                    <span>Status</span>
+                    <strong id="expiryPopoverStatus">—</strong>
+                </div>
+            
+                <div>
+                    <span>Time remaining</span>
+                    <strong id="expiryPopoverRemaining">—</strong>
+                </div>
+            
+                <div>
+                    <span>Location</span>
+                    <strong id="expiryPopoverLocation">—</strong>
+                </div>
+            
+                <div>
+                    <span>Quantity</span>
+                    <strong id="expiryPopoverQuantity">—</strong>
+                </div>
             </div>
         </div>
     </div>
