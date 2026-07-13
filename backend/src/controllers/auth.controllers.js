@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.models.js";
 import sendEmail from "../utils/sendEmail.js";
 import welcomeEmail from "../utils/welcomeEmail.js";
+import PantryItem from "../models/pantryItem.models.js";
+import ShoppingItem from "../models/shoppingItem.models.js";
 
 const generateToken = (userId) => {
     return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -109,9 +111,39 @@ const logoutUser = async (req, res) => {
     });
 };
 
+const deleteAccount = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+
+        if(!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        await Promise.all([
+            PantryItem.deleteMany({ user: userId }),
+            ShoppingItem.deleteMany({ user: userId })
+        ]);
+
+        await User.findByIdAndDelete(userId);
+
+        return res.status(200).json({
+            message: "Account deleted successfully"
+        });
+    } catch (error) {
+        console.error("Delete account error:", error);
+        return res.status(500).json({
+            message: "Could not delete account"
+        });
+    }
+};
+
 export {
     registerUser,
     loginUser,
     getMe,
-    logoutUser
+    logoutUser,
+    deleteAccount
 };

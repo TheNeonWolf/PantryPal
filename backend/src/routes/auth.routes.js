@@ -3,7 +3,8 @@ import {
     registerUser,
     loginUser,
     logoutUser,
-    getMe
+    getMe,
+    deleteAccount
 } from "../controllers/auth.controllers.js";
 import { protect } from "../middlewares/auth.middleware.js";
 
@@ -13,5 +14,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", protect, logoutUser);
 router.get("/me", protect, getMe);
+router.delete("/me", protect, deleteAccount);
 
 export default router;

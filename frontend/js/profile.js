@@ -14,6 +14,13 @@ const logoutBtn = document.getElementById("logoutBtn");
 const logoutModal = document.getElementById("logoutModal");
 const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
 const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+const openDeleteAccountModalBtn = document.getElementById("openDeleteAccountModalBtn");
+const deleteAccountModal = document.getElementById("deleteAccountModal");
+const closeDeleteAccountModalBtn = document.getElementById("closeDeleteAccountModalBtn");
+const cancelDeleteAccountBtn = document.getElementById("cancelDeleteAccountBtn");
+const confirmDeleteAccountBtn = document.getElementById("confirmDeleteAccountBtn");
+const deleteAccountConfirmation = document.getElementById("deleteAccountConfirmation");
+const deleteAccountMessage = document.getElementById("deleteAccountMessage");
 
 const loadProfile = async () => {
     try {
@@ -61,6 +68,63 @@ const loadProfile = async () => {
     }
 };
 
+const openDeleteAccountModal = () => {
+    deleteAccountConfirmation.value = "";
+    deleteAccountMessage.textContent = "";
+    confirmDeleteAccountBtn.disabled = true;
+    confirmDeleteAccountBtn.textContent = "Permanently Delete";
+    deleteAccountModal.classList.remove("hidden");
+    deleteAccountConfirmation.focus();
+};
+
+const closeDeleteAccountModal = () => {
+    deleteAccountModal.classList.add("hidden");
+    deleteAccountConfirmation.value = "";
+    deleteAccountMessage.textContent = "";
+    confirmDeleteAccountBtn.disabled = true;
+};
+
+const deleteAccount = async () => {
+    if(deleteAccountConfirmation.value.trim() !== "DELETE") {
+        deleteAccountMessage.textContent = 'Please type "DELETE" to continue.';
+        return;
+    }
+
+    confirmDeleteAccountBtn.disabled = true;
+    confirmDeleteAccountBtn.textContent = "Deleting...";
+
+    try {
+        const res = await fetch(`${API_URL}/auth/me`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            deleteAccountMessage.textContent =
+                data.message || "Could not delete account.";
+
+            confirmDeleteAccountBtn.disabled = false;
+            confirmDeleteAccountBtn.textContent =
+                "Permanently Delete";
+
+            return;
+        }
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    } catch (error) {
+        console.error(error);
+        deleteAccountMessage.textContent = "Something went wrong. Please try again.";
+        confirmDeleteAccountBtn.disabled = false;
+        confirmDeleteAccountBtn.textContent = "Permanently Delete";
+    }
+};
+
 logoutBtn.addEventListener("click", () => {
     logoutModal.classList.remove("hidden");
 });
@@ -89,5 +153,31 @@ confirmLogoutBtn.addEventListener("click", async () => {
     localStorage.removeItem("user");
     window.location.href = "index.html";
 });
+
+openDeleteAccountModalBtn.addEventListener(
+    "click",
+    openDeleteAccountModal
+);
+
+closeDeleteAccountModalBtn.addEventListener(
+    "click",
+    closeDeleteAccountModal
+);
+
+cancelDeleteAccountBtn.addEventListener(
+    "click",
+    closeDeleteAccountModal
+);
+
+deleteAccountConfirmation.addEventListener("input", () => {
+    const isConfirmed = deleteAccountConfirmation.value.trim() === "DELETE";
+    confirmDeleteAccountBtn.disabled = !isConfirmed;
+    deleteAccountMessage.textContent = "";
+});
+
+confirmDeleteAccountBtn.addEventListener(
+    "click",
+    deleteAccount
+);
 
 loadProfile();
