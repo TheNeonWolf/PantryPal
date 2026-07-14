@@ -141,10 +141,13 @@ const loadDashboard = async () => {
         expiredItemsEl.textContent = expired.length;
         runningLowEl.textContent = runningLow.length;
 
-        const sortedItems = [...items].sort(
-            (a, b) => new Date(a.expiryDate) - new Date(b.expiryDate)
+        const recentItems = [...items].sort(
+            (a, b) =>
+                new Date(b.createdAt) -
+                new Date(a.createdAt)
         );
-        renderRecentItems(sortedItems.slice(0, 5));
+
+renderRecentItems(recentItems.slice(0, 5));
     } catch (error) {
         console.error(error);
         itemsList.innerHTML = `<p class="empty-text">Could not load items.</p>`;
