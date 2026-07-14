@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pantry | PantryPal</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="./images/favicon.ico" sizes="any">
-    <link rel="icon" type="image/png" href="./images/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="./images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="./images/favicon-48x48.png" sizes="48x48">
-    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png?v=2">
     <link rel="manifest" href="./images/site.webmanifest">
 </head>
 <body>
@@ -36,7 +35,47 @@
             </header>
 
             <section class="panel">
-                <input type="text" id="searchInput" placeholder="Search items...">
+                <div class="pantry-controls">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search items..."
+                    >
+
+                    <select id="sortSelect">
+                        <option value="expiry-asc">
+                            Expiry: Soonest first
+                        </option>
+                
+                        <option value="expiry-desc">
+                            Expiry: Latest first
+                        </option>
+
+                        <option value="name-asc">
+                            Name: A–Z
+                        </option>
+
+                        <option value="name-desc">
+                            Name: Z–A
+                        </option>
+
+                        <option value="quantity-asc">
+                            Quantity: Low to high
+                        </option>
+
+                        <option value="quantity-desc">
+                            Quantity: High to low
+                        </option>
+
+                        <option value="category-asc">
+                            Category
+                        </option>
+
+                        <option value="location-asc">
+                            Location
+                        </option>
+                    </select>
+                </div>
 
                 <div id="pantryList" class="items-list">
                     <p class="empty-text">Loading items...</p>
@@ -71,6 +110,20 @@
                     <option value="box">box</option>
                     <option value="bag">bag</option>
                 </select>
+
+                <select id="editItemLocation">
+                    <option value="Fridge">Fridge</option>
+                    <option value="Freezer">Freezer</option>
+                    <option value="Pantry">Pantry</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <input
+                    type="text"
+                    id="editItemCustomLocation"
+                    placeholder="Custom location"
+                    class="hidden"
+                >
 
                 <input type="date" id="editItemExpiryDate" required>
 

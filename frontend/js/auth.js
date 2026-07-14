@@ -1,6 +1,26 @@
-// Register
-
 const API_URL = "http://localhost:5000/api";
+
+const passwordInput =
+    document.getElementById("password") ||
+    document.getElementById("loginPassword");
+
+const togglePasswordBtn =
+    document.getElementById("togglePasswordBtn");
+
+if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener("click", () => {
+
+        const hidden =
+            passwordInput.type === "password";
+
+        passwordInput.type = hidden ? "text" : "password";
+
+        togglePasswordBtn.textContent =
+            hidden ? "Hide" : "Show";
+    });
+}
+
+// Register
 
 const registerForm = document.getElementById("registerForm");
 const message = document.getElementById("message");

@@ -28,6 +28,7 @@ const cancelMoveBoughtBtn = document.getElementById("cancelMoveBoughtBtn");
 const confirmMoveBoughtBtn = document.getElementById("confirmMoveBoughtBtn");
 const moveBoughtItemsList = document.getElementById("moveBoughtItemsList");
 const moveBoughtMessage = document.getElementById("moveBoughtMessage");
+const shoppingFormError = document.getElementById("shoppingFormError");
 
 const pantryCategories = [
     "Fruits",
@@ -129,10 +130,49 @@ const loadShoppingItems = async () => {
 const addShoppingItem = async (e) => {
     e.preventDefault();
 
+    shoppingFormError.textContent = "";
+    shoppingMessage.textContent = "";
+
+    const shoppingName =
+        document.getElementById("shoppingName");
+
+    const shoppingQuantity =
+        document.getElementById("shoppingQuantity");
+
+    const shoppingUnit =
+        document.getElementById("shoppingUnit");
+
+    if (!shoppingName.value.trim()) {
+        shoppingFormError.textContent =
+            "Please enter an item name.";
+
+        shoppingName.focus();
+        return;
+    }
+
+    if (
+        shoppingQuantity.value === "" ||
+        Number(shoppingQuantity.value) <= 0
+    ) {
+        shoppingFormError.textContent =
+            "Quantity must be greater than 0.";
+
+        shoppingQuantity.focus();
+        return;
+    }
+
+    if (!shoppingUnit.value) {
+        shoppingFormError.textContent =
+            "Please select a unit.";
+
+        shoppingUnit.focus();
+        return;
+    }
+
     const itemData = {
-        name: document.getElementById("shoppingName").value.trim(),
-        quantity: Number(document.getElementById("shoppingQuantity").value),
-        unit: document.getElementById("shoppingUnit").value,
+        name: shoppingName.value.trim(),
+        quantity: Number(shoppingQuantity.value),
+        unit: shoppingUnit.value
     };
 
     try {
@@ -153,12 +193,14 @@ const addShoppingItem = async (e) => {
         }
 
         shoppingForm.reset();
+        shoppingFormError.textContent = "";
         shoppingModal.classList.add("hidden");
         shoppingMessage.textContent = "";
+
         loadShoppingItems();
     } catch (error) {
         console.error(error);
-        shoppingMessage.textContent = "Something went wrong.";
+        shoppingMessage.textContent = "Something went wrong. Please try again.";
     }
 };
 
@@ -206,17 +248,49 @@ const openMoveBoughtModal = () => {
 
     moveBoughtItemsList.innerHTML = boughtItems
         .map((item) => {
-            const categoryOptions = pantryCategories
-                .map(
-                    (category) => `<option value="${category}">${category}</option>`
+            const categoryOptions = [
+                `
+                    <option
+                        value=""
+                        disabled
+                        ${item.category ? "" : "selected"}
+                    >
+                        Select category
+                    </option>
+                `,
+                ...pantryCategories.map(
+                    (category) => `
+                        <option
+                            value="${category}"
+                            ${item.category === category ? "selected" : ""}
+                        >
+                            ${category}
+                        </option>
+                    `
                 )
-                .join("");
+            ].join("");
             
-            const locationOptions = pantryLocations
-                .map(
-                    (location) => `<option value="${location}">${location}</option>`
+            const locationOptions = [
+                `
+                    <option
+                        value=""
+                        disabled
+                        ${item.location ? "" : "selected"}
+                    >
+                        Select storage location
+                    </option>
+                `,
+                ...pantryLocations.map(
+                    (location) => `
+                        <option
+                            value="${location}"
+                            ${item.location === location ? "selected" : ""}
+                        >
+                            ${location}
+                        </option>
+                    `
                 )
-                .join("");
+            ].join("");
             
             return `
                 <div class="move-item-card" data-id="${item._id}">
@@ -258,6 +332,22 @@ const openMoveBoughtModal = () => {
                             >
                                 ${locationOptions}
                             </select>
+                        </div>
+
+                        <div class="move-form-group">
+                            <label for="minimumQuantity-${item._id}">
+                                Minimum Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                id="minimumQuantity-${item._id}"
+                                class="move-minimum-quantity"
+                                min="0"
+                                step="1"
+                                value="0"
+                                placeholder="Example: 1"
+                            >
                         </div>
 
                         <div class="move-form-group full-width custom-location-group hidden">
@@ -311,20 +401,46 @@ const moveBoughtItemsToPantry = async () => {
 
         const category = card.querySelector(".move-category").value;
         const location = card.querySelector(".move-location").value;
+        const minimumQuantityValue = card.querySelector(".move-minimum-quantity").value;
+        const minimumQuantity =
+            minimumQuantityValue === ""
+                ? 0
+                : Number(minimumQuantityValue);
         const customLocation = card
             .querySelector(".move-custom-location")
             .value.trim();
         const expiryDate = card.querySelector(".move-expiry-date").value;
 
+        if (!category) {
+            moveBoughtMessage.textContent = `Please select a category for ${shoppingItem.name}.`;
+            return;
+        }
+        
         if(!expiryDate) {
             moveBoughtMessage.textContent =
                 `Please choose an expiry date for ${shoppingItem.name}.`;
             return;
         }
 
+        if (!location) {
+            moveBoughtMessage.textContent =
+                `Please select a storage location for ${shoppingItem.name}.`;
+            return;
+        }
+
         if(location === "Other" && !customLocation) {
             moveBoughtMessage.textContent =
                 `Please enter a custom location for ${shoppingItem.name}.`;
+            return;
+        }
+
+        if (
+            !Number.isFinite(minimumQuantity) ||
+            minimumQuantity < 0
+        ) {
+            moveBoughtMessage.textContent =
+                `Please enter a valid minimum quantity for ${shoppingItem.name}.`;
+        
             return;
         }
 
@@ -335,7 +451,7 @@ const moveBoughtItemsToPantry = async () => {
                 category,
                 quantity: shoppingItem.quantity,
                 unit: shoppingItem.unit,
-                minimumQuantity: 1,
+                minimumQuantity,
                 location,
                 customLocation:
                     location === "Other" ? customLocation : "",
@@ -493,13 +609,20 @@ if (shoppingList){
 
 if(openShoppingModalBtn) {
     openShoppingModalBtn.addEventListener("click", () => {
+        shoppingForm.reset();
+        shoppingFormError.textContent = "";
+        shoppingMessage.textContent = "";
         shoppingModal.classList.remove("hidden");
+        document.getElementById("shoppingName").focus();
     });
 }
 
 if (closeShoppingModalBtn) {
     closeShoppingModalBtn.addEventListener("click", () => {
         shoppingModal.classList.add("hidden");
+        shoppingForm.reset();
+        shoppingFormError.textContent = "";
+        shoppingMessage.textContent = "";
     });
 }
 

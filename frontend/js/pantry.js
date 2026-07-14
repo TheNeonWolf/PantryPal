@@ -38,6 +38,9 @@ const expiryPopoverStatus = document.getElementById("expiryPopoverStatus");
 const expiryPopoverRemaining = document.getElementById("expiryPopoverRemaining");
 const expiryPopoverLocation = document.getElementById("expiryPopoverLocation");
 const expiryPopoverQuantity = document.getElementById("expiryPopoverQuantity");
+const sortSelect = document.getElementById("sortSelect");
+const editItemLocation = document.getElementById("editItemLocation");
+const editItemCustomLocation = document.getElementById("editItemCustomLocation");
 
 const getCategoryIcon = (category) => {
     const categoryIcons = {
@@ -83,6 +86,21 @@ const getDaysLeft = (expiryDate) => {
     return Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
 };
 
+const capitalizeWords = (text) => {
+    if (!text) return "";
+
+    return text
+        .toLowerCase()
+        .split(" ")
+        .filter(word => word)
+        .map(
+            word =>
+                word.charAt(0).toUpperCase() +
+                word.slice(1)
+        )
+        .join(" ");
+};
+
 const getExpiryStatus = (expiryDate) => {
     const daysLeft = getDaysLeft(expiryDate);
 
@@ -100,7 +118,10 @@ const renderItems = (items) => {
     pantryList.innerHTML = items
         .map((item) => {
             const status = getExpiryStatus(item.expiryDate);
-            const location = item.customLocation || item.location;
+            const location = item.customLocation
+                ? capitalizeWords(item.customLocation)
+                : item.location;
+
             const icon = getCategoryIcon(item.category);
 
             return `
@@ -176,7 +197,7 @@ const confirmDelete = async () => {
             (item) => item._id !== deleteItemId
         );
 
-        renderItems(pantryItems);
+        updatePantryView();
         showToast("🗑️ Item removed.");
     } catch (error) {
         console.error(error);
@@ -249,9 +270,17 @@ const openEditModal = (id) => {
     document.getElementById("editItemName").value = item.name;
     document.getElementById("editItemQuantity").value = item.quantity;
     document.getElementById("editItemUnit").value = item.unit;
-    document.getElementById("editItemExpiryDate").value =
-        item.expiryDate.split("T")[0];
-    
+
+    editItemLocation.value = item.location || "Pantry";
+    editItemCustomLocation.value = item.customLocation || "";
+
+    if (item.location === "Other") {
+        editItemCustomLocation.classList.remove("hidden");
+    } else {
+        editItemCustomLocation.classList.add("hidden");
+    }
+
+    document.getElementById("editItemExpiryDate").value = item.expiryDate.split("T")[0];
     editItemModal.classList.remove("hidden");
 };
 
@@ -264,8 +293,21 @@ const updateItem = async (e) => {
         name: document.getElementById("editItemName").value.trim(),
         quantity: Number(document.getElementById("editItemQuantity").value),
         unit: document.getElementById("editItemUnit").value,
+        location: editItemLocation.value,
+        customLocation: editItemLocation.value === "Other" ? editItemCustomLocation.value.trim() : "",
         expiryDate: document.getElementById("editItemExpiryDate").value
     };
+
+    if (
+        updatedData.location === "Other" &&
+        !updatedData.customLocation
+    ) {
+        editItemMessage.textContent =
+            "Please enter a custom location.";
+
+        editItemCustomLocation.focus();
+        return;
+    }
 
     try {
         if (updatedData.quantity === 0){
@@ -292,7 +334,7 @@ const updateItem = async (e) => {
                 (item) => item._id !== id
             );
 
-            renderItems(pantryItems);
+            updatePantryView();
             showToast("🗑️ Item removed because quantity reached 0.");
             return;
         }
@@ -347,7 +389,7 @@ const loadPantryItems = async () => {
         const data = await res.json();
         pantryItems = data.items || [];
 
-        renderItems(pantryItems);
+        updatePantryView();
     } catch (error) {
         console.error(error);
         pantryList.innerHTML = `<p class="empty-text">Could not load pantry items.</p>`;
@@ -382,7 +424,9 @@ const getExpiryRemainingText = (expiryDate) => {
 };
 
 const openExpiryPopover = (item) => {
-    const location = item.customLocation || item.location;
+    const location = item.customLocation
+        ? capitalizeWords(item.customLocation)
+        : item.location;
 
     expiryPopoverName.textContent = item.name;
 
@@ -404,21 +448,122 @@ const openExpiryPopover = (item) => {
     expiryPopover.classList.remove("hidden");
 };
 
-searchInput.addEventListener("input", () => {
-    const searchTerm = searchInput.value.toLowerCase();
+const sortPantryItems = (items, sortValue) => {
+    const sortedItems = [...items];
+
+    switch (sortValue) {
+        case "expiry-asc":
+            return sortedItems.sort((a, b) => {
+                if (!a.expiryDate) return 1;
+                if (!b.expiryDate) return -1;
+
+                return (
+                    new Date(a.expiryDate) -
+                    new Date(b.expiryDate)
+                );
+            });
+
+        case "expiry-desc":
+            return sortedItems.sort((a, b) => {
+                if (!a.expiryDate) return 1;
+                if (!b.expiryDate) return -1;
+
+                return (
+                    new Date(b.expiryDate) -
+                    new Date(a.expiryDate)
+                );
+            });
+
+        case "name-asc":
+            return sortedItems.sort((a, b) =>
+                a.name.localeCompare(b.name)
+            );
+
+        case "name-desc":
+            return sortedItems.sort((a, b) =>
+                b.name.localeCompare(a.name)
+            );
+
+        case "quantity-asc":
+            return sortedItems.sort(
+                (a, b) =>
+                    Number(a.quantity) -
+                    Number(b.quantity)
+            );
+
+        case "quantity-desc":
+            return sortedItems.sort(
+                (a, b) =>
+                    Number(b.quantity) -
+                    Number(a.quantity)
+            );
+
+        case "category-asc":
+            return sortedItems.sort((a, b) =>
+                (a.category || "Other").localeCompare(
+                    b.category || "Other"
+                )
+            );
+
+        case "location-asc":
+            return sortedItems.sort((a, b) => {
+                const locationA =
+                    a.location === "Other" &&
+                    a.customLocation
+                        ? a.customLocation
+                        : a.location || "";
+
+                const locationB =
+                    b.location === "Other" &&
+                    b.customLocation
+                        ? b.customLocation
+                        : b.location || "";
+
+                return locationA.localeCompare(locationB);
+            });
+
+        default:
+            return sortedItems;
+    }
+};
+
+const updatePantryView = () => {
+    const searchTerm =
+        searchInput.value.trim().toLowerCase();
 
     const filteredItems = pantryItems.filter((item) => {
-        const location = item.customLocation || item.location;
+        const location =
+            item.location === "Other" &&
+            item.customLocation
+                ? item.customLocation
+                : item.location || "";
 
         return (
-            item.name.toLowerCase().includes(searchTerm) ||
-            item.category.toLowerCase().includes(searchTerm) ||
-            location.toLowerCase().includes(searchTerm)
+            item.name
+                .toLowerCase()
+                .includes(searchTerm) ||
+
+            (item.category || "")
+                .toLowerCase()
+                .includes(searchTerm) ||
+
+            location
+                .toLowerCase()
+                .includes(searchTerm)
         );
     });
 
-    renderItems(filteredItems);
-});
+    const sortedItems = sortPantryItems(
+        filteredItems,
+        sortSelect.value
+    );
+
+    renderItems(sortedItems);
+};
+
+searchInput.addEventListener("input", updatePantryView);
+
+sortSelect.addEventListener("change", updatePantryView);
 
 pantryList.addEventListener("click", (e) => {
     if(e.target.classList.contains("delete-btn")) {
@@ -558,6 +703,22 @@ if (cancelDeleteBtn) {
 if (closeExpiryPopoverBtn) {
     closeExpiryPopoverBtn.addEventListener("click", () => {
         expiryPopover.classList.add("hidden");
+    });
+}
+
+if (editItemLocation) {
+    editItemLocation.addEventListener("change", () => {
+        if (editItemLocation.value === "Other") {
+            editItemCustomLocation.classList.remove(
+                "hidden"
+            );
+            editItemCustomLocation.focus();
+        } else {
+            editItemCustomLocation.classList.add(
+                "hidden"
+            );
+            editItemCustomLocation.value = "";
+        }
     });
 }
 

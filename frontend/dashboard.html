@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | PantryPal</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="./images/favicon.ico" sizes="any">
-    <link rel="icon" type="image/png" href="./images/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="./images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="./images/favicon-48x48.png" sizes="48x48">
-    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png?v=2">
     <link rel="manifest" href="./images/site.webmanifest">
 </head>
 <body>
@@ -45,19 +44,37 @@
                     <h3 id="totalItems">0</h3>
                 </div>
 
-                <div class="stat-card warning">
+                <div
+                    class="stat-card warning clickable-stat"
+                    data-filter="expiring"
+                    role="button"
+                    tabindex="0"
+                >
                     <p>⚠️ Expiring Soon</p>
                     <h3 id="expiringSoon">0</h3>
+                    <span class="stat-card-hint">View items →</span>
                 </div>
 
-                <div class="stat-card danger">
+                <div
+                    class="stat-card danger clickable-stat"
+                    data-filter="expired"
+                    role="button"
+                    tabindex="0"
+                >
                     <p>❌ Expired</p>
                     <h3 id="expiredItems">0</h3>
+                    <span class="stat-card-hint">View items →</span>
                 </div>
 
-                <div class="stat-card">
-                    <p>❗Running Low</p>
+                <div
+                    class="stat-card clickable-stat"
+                    data-filter="low"
+                    role="button"
+                    tabindex="0"
+                >
+                    <p>❗ Running Low</p>
                     <h3 id="runningLow">0</h3>
+                    <span class="stat-card-hint">View items →</span>
                 </div>
             </section>
 
@@ -65,6 +82,73 @@
                 <h3>Recent Items</h3>
                 <div id="itemsList" class="items-list">
                     <p class="empty-text">No items yet.</p>
+                </div>
+            </section>
+
+            <section class="dashboard-insights-grid">
+                <div class="panel pantry-chart-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Pantry by Category</h3>
+                            <p>See how your pantry items are distributed.</p>
+                        </div>
+                    </div>
+                
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    
+                        <div id="categoryChartEmpty" class="chart-empty hidden">
+                            <span>📊</span>
+                            <p>Add pantry items to view category statistics.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel pantry-insights-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Pantry Insights</h3>
+                            <p>A quick summary of your pantry.</p>
+                        </div>
+                    </div>
+                
+                    <div class="pantry-insights-list">
+                        <div class="insight-row">
+                            <span class="insight-icon">🏆</span>
+                        
+                            <div>
+                                <small>Most stocked category</small>
+                                <strong id="mostStockedCategory">—</strong>
+                            </div>
+                        </div>
+                    
+                        <div class="insight-row">
+                            <span class="insight-icon">📍</span>
+                        
+                            <div>
+                                <small>Most used location</small>
+                                <strong id="mostUsedLocation">—</strong>
+                            </div>
+                        </div>
+                    
+                        <div class="insight-row">
+                            <span class="insight-icon">⏳</span>
+                        
+                            <div>
+                                <small>Next item to expire</small>
+                                <strong id="nextExpiryItem">—</strong>
+                            </div>
+                        </div>
+                    
+                        <div class="insight-row">
+                            <span class="insight-icon">📦</span>
+
+                            <div>
+                                <small>Categories used</small>
+                                <strong id="categoriesUsed">0</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </section>
@@ -76,9 +160,10 @@
                 <h2>🥫 Add Pantry Item</h2>
                 <button id="closeAddModalBtn" class="icon-btn">✕</button>
             </div> 
-            <form id="addItemForm">
+            <form id="addItemForm" novalidate>
                 <input type="text" id="itemName" placeholder="Item name" required> 
                 <select id="itemCategory">
+                    <option value="" selected disabled>Select category</option>
                     <option value="Fruits">Fruits</option>
                     <option value="Vegetables">Vegetables</option>
                     <option value="Dairy">Dairy</option>
@@ -93,6 +178,7 @@
                 </select>  
                 <input type="number" id="itemQuantity" placeholder="Quantity" min="0" required>
                 <select id="itemUnit">
+                    <option value="" selected disabled>Select unit</option>
                     <option value="pcs">pcs</option>
                     <option value="g">g</option>
                     <option value="kg">kg</option>
@@ -106,13 +192,15 @@
                 </select> 
                 <input type="number" id="itemMinimumQuantity" placeholder="Minimum quantity" min="0">  
                 <select id="itemLocation">
+                    <option value="" selected disabled>Select storage location</option>
                     <option value="Fridge">Fridge</option>
                     <option value="Freezer">Freezer</option>
                     <option value="Pantry">Pantry</option>
                     <option value="Other">Other</option>
                 </select>  
                 <input type="text" id="itemCustomLocation" placeholder="Custom location" class="hidden">   
-                <input type="date" id="itemExpiryDate" required>   
+                <input type="date" id="itemExpiryDate" required> 
+                <p id="addItemError" class="form-error"></p>  
                 <button type="submit" class="btn full-btn">Add Item</button>
             </form>
             <p id="addItemMessage" class="message"></p>
@@ -185,6 +273,37 @@
         </div>
     </div>
 
+    <div id="dashboardItemsModal" class="modal hidden">
+        <div class="modal-card dashboard-items-modal">
+            <div class="modal-header">
+                <div>
+                    <h2 id="dashboardItemsModalTitle">
+                        Pantry items
+                    </h2>
+                
+                    <p id="dashboardItemsModalSubtitle">
+                        Items requiring your attention.
+                    </p>
+                </div>
+            
+                <button
+                    id="closeDashboardItemsModalBtn"
+                    class="icon-btn"
+                    type="button"
+                    aria-label="Close item list"
+                >
+                    ✕
+                </button>
+            </div>
+        
+            <div
+                id="dashboardItemsModalList"
+                class="dashboard-modal-list"
+            ></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping List | PantryPal</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="./images/favicon.ico" sizes="any">
-    <link rel="icon" type="image/png" href="./images/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="./images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="./images/favicon-48x48.png" sizes="48x48">
-    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon.png?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png?v=2">
     <link rel="manifest" href="./images/site.webmanifest">
 </head>
 <body>
@@ -64,11 +63,12 @@
                 <button id="closeShoppingModalBtn" class="icon-btn">✕</button>
             </div>
 
-            <form id="shoppingForm">
+            <form id="shoppingForm" novalidate>
                 <input type="text" id="shoppingName" placeholder="Item Name" required>
                 <input type="number" id="shoppingQuantity" placeholder="Quantity" min="0" required>
 
                 <select id="shoppingUnit">
+                    <option value="" selected disabled>Select unit</option>
                     <option value="pcs">pcs</option>
                     <option value="g">g</option>
                     <option value="kg">kg</option>
@@ -81,6 +81,7 @@
                     <option value="bag">bag</option>
                 </select>
 
+                <p id="shoppingFormError" class="form-error"></p>
                 <button type="submit" class="btn full-btn">Add Item</button>
             </form>
             <p id="shoppingMessage" class="message"></p>
